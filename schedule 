@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grade 12 Caravario — Schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1c4f7c;
+    --navy-deep: #123449;
+    --ink: #14181c;
+    --time-blue: #cfe6f2;
+    --time-blue-line: #8fc4d9;
+    --highlight: #eaf6fa;
+    --highlight-line: #8fc4d9;
+    --red: #c0392b;
+    --paper: #fbfaf7;
+    --card: #ffffff;
+    --line: #e3ddd0;
+    --muted: #6b7280;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #14181c;
+      --card: #1c2228;
+      --ink: #f2efe9;
+      --line: #2c343c;
+      --muted: #9aa4ad;
+      --time-blue: #223846;
+      --time-blue-line: #3f6a80;
+      --highlight: #1e2f34;
+      --highlight-line: #3f6a80;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14181c;
+    --card: #1c2228;
+    --ink: #f2efe9;
+    --line: #2c343c;
+    --muted: #9aa4ad;
+    --time-blue: #223846;
+    --time-blue-line: #3f6a80;
+    --highlight: #1e2f34;
+    --highlight-line: #3f6a80;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: calc(env(safe-area-inset-top, 0px) + 16px) 18px 0 18px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--navy);
+    margin: 2px 0 2px 0;
+    line-height: 1.05;
+  }
+  .meta {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  nav.days {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scrollbar-width: none;
+  }
+  nav.days::-webkit-scrollbar { display: none; }
+  nav.days button {
+    flex: 1 0 auto;
+    min-width: 58px;
+    padding: 9px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+  }
+  nav.days button .d {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  nav.days button.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  nav.days button.active .d { color: #cfe1ee; }
+  nav.days button.today:not(.active) {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+
+  main {
+    flex: 1;
+    padding: 6px 18px 28px 18px;
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 2px;
+  }
+
+  .slot {
+    display: grid;
+    grid-template-columns: 66px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .slot:last-child { border-bottom: none; }
+
+  .time {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--muted);
+    line-height: 1.35;
+    padding-top: 2px;
+  }
+  .time b { display: block; color: var(--ink); font-size: 12.5px; }
+
+  .content {
+    border-left: 3px solid var(--line);
+    padding: 2px 0 2px 12px;
+    border-radius: 2px;
+  }
+  .slot.free .content { border-left-color: var(--line); }
+  .slot.break .content {
+    border-left-color: var(--highlight-line);
+    background: var(--highlight);
+    padding: 8px 10px;
+    border-radius: 0 8px 8px 0;
+  }
+  .slot.red .content { border-left-color: var(--red); }
+  .slot.async .content { border-left-color: var(--navy); }
+
+  .label {
+    font-weight: 700;
+    font-size: 15px;
+    margin: 0;
+  }
+  .slot.break .label { color: var(--navy-deep); }
+  .slot.red .label { color: var(--red); }
+  .slot.async .label { color: var(--navy); font-style: italic; }
+  .slot.free .label { color: var(--muted); font-weight: 500; font-style: italic; }
+
+  .sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 2px 0 0 0;
+  }
+  .tracks {
+    margin: 5px 0 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tracks li {
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .tracks li .tag {
+    font-size: 10.5px;
+    color: var(--navy);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  .now-badge {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #fff;
+    background: var(--red);
+    padding: 2px 6px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+  .slot.is-now .content {
+    background: var(--highlight);
+    border-radius: 0 8px 8px 0;
+    padding: 8px 10px;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 10px 18px calc(env(safe-area-inset-bottom, 0px) + 18px) 18px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">DON BOSCO ACADEMY OF PAMPANGA, INC. · SENIOR HIGH SCHOOL</div>
+  <h1>Grade 12 Caravario</h1>
+  <div class="meta">Second Term · S.Y. 2026–2027 · Adviser: Mr. Jay Lawrence R. Nicdao</div>
+  <nav class="days" id="dayNav"></nav>
+</header>
+
+<main>
+  <div class="timeline" id="timeline"></div>
+</main>
+
+<footer>Tap the tabs above to switch days.</footer>
+
+<script>
+const DAYS = [
+  { key: "mon", name: "Monday", short: "Mon",
+    slots: [
+      { start: "7:30 AM", end: "8:20 AM", type: "break", label: "General Assembly / Adviser's Time" },
+      { start: "8:20 AM", end: "9:10 AM", type: "red", label: "Pastoral Time" },
+      { start: "9:15 AM", end: "10:10 AM", type: "break", label: "Recess", sub: "9:15 – 9:45 AM" },
+      { start: "10:10 AM", end: "10:40 AM", type: "free", label: "Free period" },
+      { start: "10:40 AM", end: "11:35 AM", type: "free", label: "Free period" },
+      { start: "11:35 AM", end: "12:30 PM", type: "break", label: "Lunch", sub: "11:35 AM – 12:15 PM" },
+      { start: "12:30 PM", end: "1:10 PM", type: "free", label: "Free period" },
+      { start: "1:10 PM", end: "2:05 PM", type: "free", label: "Free period" },
+      { start: "2:05 PM", end: "3:00 PM", type: "free", label: "Free period" },
+      { start: "3:00 PM", end: "3:30 PM", type: "break", label: "Adviser's Time / Dismissal" }
+    ]
+  },
+  { key: "tue", name: "Tuesday", short: "Tue",
+    slots: [
+      { start: "7:30 AM", end: "8:20 AM", type: "break", label: "Adviser's Time" },
+      { start: "8:20 AM", end: "9:10 AM", type: "free", label: "Free period" },
+      { start: "9:15 AM", end: "10:10 AM", type: "free", label: "Free period" },
+      { start: "10:10 AM", end: "10:40 AM", type: "break", label: "Recess" },
+      { start: "10:40 AM", end: "11:35 AM", type: "free", label: "Free period" },
+      { start: "11:35 AM", end: "12:30 PM", type: "free", label: "Free period" },
+      { start: "12:30 PM", end: "1:10 PM", type: "break", label: "Lunch" },
+      { start: "1:10 PM", end: "2:05 PM", type: "free", label: "Free period" },
+      { start: "2:05 PM", end: "3:00 PM", type: "free", label: "Free period" },
+      { start: "3:00 PM", end: "3:30 PM", type: "break", label: "Adviser's Time / Dismissal" }
+    ]
+  },
+  { key: "wed", name: "Wednesday", short: "Wed",
+    slots: [
+      { start: "7:30 AM", end: "8:20 AM", type: "break", label: "RHGP" },
+      { start: "8:20 AM", end: "10:10 AM", type: "class", tracks: [
+          ["CI: Music", "ABM"], ["Research 2", "HUMSS"], ["First Aid", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "10:10 AM", end: "10:40 AM", type: "break", label: "Recess" },
+      { start: "10:40 AM", end: "12:30 PM", type: "class", tracks: [
+          ["Design & Innovation", "ABM"], ["Social Science", "HUMSS"], ["Pre-Calculus", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "12:30 PM", end: "1:10 PM", type: "break", label: "Lunch" },
+      { start: "1:10 PM", end: "3:00 PM", type: "class", tracks: [
+          ["Business 3", "ABM"], ["CI: Music", "HUMSS"], ["Research 2", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "3:00 PM", end: "3:30 PM", type: "break", label: "Adviser's Time / Dismissal" }
+    ]
+  },
+  { key: "thu", name: "Thursday", short: "Thu",
+    slots: [
+      { start: "7:30 AM", end: "7:45 AM", type: "break", label: "Adviser's Time" },
+      { start: "7:45 AM", end: "9:35 AM", type: "class", tracks: [
+          ["Research 2", "ABM"], ["First Aid", "HUMSS"], ["Chemistry 2", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "9:35 AM", end: "10:05 AM", type: "break", label: "Recess" },
+      { start: "10:05 AM", end: "11:55 AM", type: "class", tracks: [
+          ["CI: Music", "ABM"], ["Research 2", "HUMSS"], ["Pre-Calculus", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "11:55 AM", end: "12:00 PM", type: "break", label: "Adviser's Time / Dismissal" },
+      { start: "12:00 PM", end: "4:30 PM", type: "async", label: "Asynchronous Tasks Completion" }
+    ]
+  },
+  { key: "fri", name: "Friday", short: "Fri",
+    slots: [
+      { start: "7:30 AM", end: "7:40 AM", type: "break", label: "Adviser's Time" },
+      { start: "7:40 AM", end: "9:20 AM", type: "class", tracks: [
+          ["Business 3", "ABM"], ["CI: Music", "HUMSS"], ["Research 2", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "9:20 AM", end: "9:50 AM", type: "break", label: "Recess" },
+      { start: "9:50 AM", end: "11:30 AM", type: "class", tracks: [
+          ["Research 2", "ABM"], ["Social Science", "HUMSS"], ["First Aid", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "11:30 AM", end: "12:10 PM", type: "break", label: "Lunch" },
+      { start: "12:20 PM", end: "1:50 PM", type: "class", tracks: [
+          ["Design & Innovation", "ABM"], ["First Aid", "HUMSS"], ["Chemistry 2", "STEM"], ["Work Immersion", "TVL"] ] },
+      { start: "1:50 PM", end: "2:40 PM", type: "red", label: "Sodality", sub: "Prayers / Dismissal" },
+      { start: "2:40 PM", end: "2:50 PM", type: "break", label: "Adviser's Time / Dismissal" }
+    ]
+  }
+];
+
+function to24(t) {
+  const [time, mer] = t.split(" ");
+  let [h, m] = time.split(":").map(Number);
+  if (mer === "PM" && h !== 12) h += 12;
+  if (mer === "AM" && h === 12) h = 0;
+  return h * 60 + m;
+}
+
+const nav = document.getElementById("dayNav");
+const timeline = document.getElementById("timeline");
+const now = new Date();
+const jsDay = now.getDay(); // 0 Sun ... 6 Sat
+const dayIndexMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4 }; // Mon-Fri -> DAYS index
+const todayIdx = dayIndexMap.hasOwnProperty(jsDay) ? dayIndexMap[jsDay] : null;
+const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+let activeIdx = todayIdx !== null ? todayIdx : 0;
+
+DAYS.forEach((d, i) => {
+  const btn = document.createElement("button");
+  btn.innerHTML = d.short + (i === todayIdx ? '<span class="d">Today</span>' : '<span class="d">&nbsp;</span>');
+  if (i === todayIdx) btn.classList.add("today");
+  btn.addEventListener("click", () => { activeIdx = i; render(); });
+  btn.dataset.idx = i;
+  nav.appendChild(btn);
+});
+
+function render() {
+  [...nav.children].forEach((b, i) => b.classList.toggle("active", i === activeIdx));
+  const day = DAYS[activeIdx];
+  const isToday = activeIdx === todayIdx;
+  timeline.innerHTML = "";
+
+  day.slots.forEach(slot => {
+    const startM = to24(slot.start);
+    const endM = to24(slot.end);
+    const isNow = isToday && nowMinutes >= startM && nowMinutes < endM;
+
+    const row = document.createElement("div");
+    row.className = "slot " + slot.type + (isNow ? " is-now" : "");
+
+    const time = document.createElement("div");
+    time.className = "time";
+    time.innerHTML = "<b>" + slot.start.replace(" AM","a").replace(" PM","p") + "</b>" + slot.end.replace(" AM"," a").replace(" PM"," p");
+    row.appendChild(time);
+
+    const content = document.createElement("div");
+    content.className = "content";
+
+    if (slot.type === "class") {
+      const ul = document.createElement("ul");
+      ul.className = "tracks";
+      slot.tracks.forEach(([name, track]) => {
+        const li = document.createElement("li");
+        li.textContent = name + " ";
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = track;
+        li.appendChild(tag);
+        ul.appendChild(li);
+      });
+      content.appendChild(ul);
+    } else {
+      const p = document.createElement("p");
+      p.className = "label";
+      p.textContent = slot.label;
+      if (isNow) {
+        const badge = document.createElement("span");
+        badge.className = "now-badge";
+        badge.textContent = "NOW";
+        p.appendChild(badge);
+      }
+      content.appendChild(p);
+      if (slot.sub) {
+        const s = document.createElement("p");
+        s.className = "sub";
+        s.textContent = slot.sub;
+        content.appendChild(s);
+      }
+    }
+
+    if (slot.type === "class" && isNow) {
+      const badge = document.createElement("span");
+      badge.className = "now-badge";
+      badge.textContent = "NOW";
+      content.insertBefore(badge, content.firstChild);
+    }
+
+    row.appendChild(content);
+    timeline.appendChild(row);
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>
