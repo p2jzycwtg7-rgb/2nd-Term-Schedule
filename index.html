@@ -286,7 +286,7 @@ const lockOverlay = document.getElementById("lockOverlay");
 const LOCK_KEY = "gr12-caravario-schedule-locked";
 let alreadyLocked = false;
 try {
-  alreadyLocked = localStorage.getItem(LOCK_KEY) === "1";
+  alreadyLocked = localStorage.getItem(LOCK_KEY) === "0";
 } catch (e) {
   alreadyLocked = false;
 }
