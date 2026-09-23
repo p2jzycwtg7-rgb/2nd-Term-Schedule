@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +7,13 @@
 <title>Grade 12 Caravario — Schedule</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,600;1,700;1,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #1c4f7c;
     --navy-deep: #123449;
+    --gold: #c8973f;
+    --gold-soft: #e8c789;
     --ink: #14181c;
     --highlight: #eaf6fa;
     --highlight-line: #8fc4d9;
@@ -21,21 +22,25 @@
     --card: #ffffff;
     --line: #e3ddd0;
     --muted: #6b7280;
-    --overlay-bg: rgba(251, 250, 247, 0.88);
+    --overlay-bg: rgba(251, 250, 247, 0.9);
+    --shadow: 0 10px 30px -12px rgba(18, 52, 73, 0.18);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --navy: #6fa9d8;
       --navy-deep: #9cc6ea;
+      --gold: #e0b360;
+      --gold-soft: #f2d8a3;
       --ink: #f2efe9;
       --highlight: #1e2f34;
       --highlight-line: #3f6a80;
       --red: #e0685a;
-      --paper: #14181c;
+      --paper: #10141a;
       --card: #1c2228;
       --line: #2c343c;
       --muted: #9aa4ad;
-      --overlay-bg: rgba(20, 24, 28, 0.9);
+      --overlay-bg: rgba(16, 20, 26, 0.92);
+      --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
     }
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -48,9 +53,123 @@
     flex-direction: column;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    transition: background 0.2s ease, color 0.2s ease;
+    overflow-x: hidden;
   }
 
+  /* =========================================================
+     INTRO
+     ========================================================= */
+  #introOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--paper);
+    text-align: center;
+    padding: 24px;
+    overflow: hidden;
+  }
+  #introOverlay.wipe {
+    clip-path: circle(0% at 50% 42%);
+    transition: clip-path 0.95s cubic-bezier(.7,0,.3,1);
+  }
+  .intro-blob {
+    position: absolute;
+    width: 60vmax;
+    height: 60vmax;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.28;
+    pointer-events: none;
+  }
+  .intro-blob.a {
+    background: radial-gradient(circle, var(--navy), transparent 70%);
+    top: -20%; left: -20%;
+    animation: driftA 9s ease-in-out infinite alternate;
+  }
+  .intro-blob.b {
+    background: radial-gradient(circle, var(--gold), transparent 70%);
+    bottom: -25%; right: -20%;
+    animation: driftB 11s ease-in-out infinite alternate;
+  }
+  @keyframes driftA {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(6%,8%) scale(1.12); }
+  }
+  @keyframes driftB {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(-8%,-6%) scale(1.15); }
+  }
+  .intro-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .intro-crest {
+    font-size: 46px;
+    opacity: 0;
+    animation: crestIn 0.8s cubic-bezier(.2,1.4,.4,1) 0.05s forwards;
+    filter: drop-shadow(0 6px 16px rgba(28,79,124,0.3));
+  }
+  .intro-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    opacity: 0;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s ease 0.4s forwards;
+  }
+  .intro-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: 34px;
+    color: var(--navy);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .intro-title .ch {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(16px) rotate(4deg);
+    animation: charIn 0.55s cubic-bezier(.2,1,.3,1) forwards;
+  }
+  @keyframes charIn {
+    to { opacity: 1; transform: translateY(0) rotate(0deg); }
+  }
+  .intro-line {
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--navy), var(--gold));
+    border-radius: 2px;
+    animation: lineGrow 0.7s ease 1.15s forwards;
+  }
+  .intro-sub {
+    font-size: 12px;
+    color: var(--muted);
+    opacity: 0;
+    animation: fadeUp 0.6s ease 1.35s forwards;
+  }
+  @keyframes crestIn {
+    0% { opacity: 0; transform: scale(0.4) rotate(-16deg); }
+    60% { transform: scale(1.12) rotate(4deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(6px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lineGrow { to { width: 60px; } }
+
+  header, main, footer { opacity: 0; }
+  header.reveal, main.reveal, footer.reveal { animation: fadeUp 0.6s ease forwards; }
+  main.reveal { animation-delay: 0.08s; }
+  footer.reveal { animation-delay: 0.16s; }
+
+  /* =========================================================
+     HEADER / NAV
+     ========================================================= */
   header {
     position: sticky;
     top: 0;
@@ -71,9 +190,27 @@
   }
   .meta { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; }
 
-  nav.days { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
+  nav.days {
+    position: relative;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scrollbar-width: none;
+  }
   nav.days::-webkit-scrollbar { display: none; }
+  #tabIndicator {
+    position: absolute;
+    top: 0;
+    height: calc(100% - 12px);
+    background: var(--navy);
+    border-radius: 10px;
+    transition: transform 0.32s cubic-bezier(.3,1,.4,1), width 0.32s cubic-bezier(.3,1,.4,1);
+    z-index: 0;
+  }
   nav.days button {
+    position: relative;
+    z-index: 1;
     flex: 1 0 auto;
     min-width: 58px;
     padding: 9px 4px;
@@ -86,21 +223,22 @@
     font-size: 13px;
     text-align: center;
     cursor: pointer;
+    transition: color 0.22s ease, border-color 0.22s ease, transform 0.12s ease;
   }
-  nav.days button .d { display: block; font-size: 10px; font-weight: 500; color: var(--muted); margin-top: 1px; }
-  nav.days button.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+  nav.days button .d { display: block; font-size: 10px; font-weight: 500; color: var(--muted); margin-top: 1px; transition: color 0.22s ease; }
+  nav.days button:active { transform: scale(0.94); }
+  nav.days button.active { background: transparent; border-color: transparent; color: #fff; }
   nav.days button.active .d { color: #cfe1ee; }
-  nav.days button.today:not(.active) { border-color: var(--navy); color: var(--navy); }
+  nav.days button.today:not(.active) { border-color: var(--gold); color: var(--gold); }
 
-  main {
-    flex: 1;
-    padding: 6px 18px 28px 18px;
-    max-width: 560px;
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-  }
+  #lockBar { height: 3px; width: 100%; background: var(--line); overflow: hidden; border-radius: 3px; margin-top: 10px; }
+  #lockBarFill { height: 100%; width: 100%; background: var(--highlight-line); transform-origin: left; transition: width linear, background 0.4s ease; }
+  #lockBarFill.warn { background: var(--red); }
 
+  /* =========================================================
+     MAIN / TIMELINE
+     ========================================================= */
+  main { flex: 1; padding: 6px 18px 28px 18px; max-width: 560px; width: 100%; margin: 0 auto; position: relative; }
   .timeline { position: relative; padding-left: 2px; }
 
   .slot {
@@ -110,20 +248,19 @@
     padding: 12px 0;
     border-bottom: 1px solid var(--line);
     align-items: start;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: slotIn 0.42s cubic-bezier(.2,1,.3,1) forwards;
   }
   .slot:last-child { border-bottom: none; }
+  @keyframes slotIn { to { opacity: 1; transform: translateY(0); } }
 
   .time { font-size: 11.5px; font-weight: 600; color: var(--muted); line-height: 1.35; padding-top: 2px; }
   .time b { display: block; color: var(--ink); font-size: 12.5px; }
 
-  .content { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; border-radius: 2px; }
+  .content { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; border-radius: 2px; transition: transform 0.18s ease; }
   .slot.free .content { border-left-color: var(--line); }
-  .slot.break .content {
-    border-left-color: var(--highlight-line);
-    background: var(--highlight);
-    padding: 8px 10px;
-    border-radius: 0 8px 8px 0;
-  }
+  .slot.break .content { border-left-color: var(--highlight-line); background: var(--highlight); padding: 8px 10px; border-radius: 0 8px 8px 0; }
   .slot.red .content { border-left-color: var(--red); }
   .slot.async .content { border-left-color: var(--navy); }
 
@@ -138,106 +275,163 @@
   .tracks li { font-size: 13.5px; color: var(--ink); }
   .tracks li .tag { font-size: 10.5px; color: var(--navy); font-weight: 600; margin-left: 2px; }
 
-  .now-badge {
-    display: inline-block;
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    color: #fff;
-    background: var(--red);
-    padding: 2px 6px;
-    border-radius: 20px;
-    margin-left: 8px;
-    vertical-align: middle;
-    position: relative;
-    top: -1px;
-  }
-  .slot.is-now .content { background: var(--highlight); border-radius: 0 8px 8px 0; padding: 8px 10px; }
-
   footer { text-align: center; font-size: 11px; color: var(--muted); padding: 10px 18px calc(env(safe-area-inset-bottom, 0px) + 18px) 18px; }
 
-  #lockOverlay {
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    display: none;
-    flex-direction: column;
+  /* =========================================================
+     "NOW" — LIVE CARD
+     ========================================================= */
+  .slot.now-card {
+    grid-template-columns: 1fr;
+    padding: 4px 0 14px 0;
+    border-bottom: none;
+  }
+  .now-ring {
+    position: relative;
+    border-radius: 16px;
+    padding: 2px;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: var(--shadow);
+  }
+  .now-ring::before {
+    content: "";
+    position: absolute;
+    inset: -60%;
+    background: conic-gradient(from 0deg, var(--navy), var(--gold), var(--navy-deep), var(--gold-soft), var(--navy));
+    animation: ringSpin 5s linear infinite;
+    z-index: 0;
+  }
+  @keyframes ringSpin { to { transform: rotate(360deg); } }
+  .now-inner {
+    position: relative;
+    z-index: 1;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px 16px 16px;
+  }
+  .now-top {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 14px;
-    background: var(--overlay-bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    text-align: center;
-    padding: 24px;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #fff;
+    background: linear-gradient(90deg, var(--navy), var(--navy-deep));
+    padding: 4px 9px 4px 7px;
+    border-radius: 20px;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold-soft);
+    animation: dotPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.7); opacity: 0.5; }
+  }
+  .now-countdown { font-size: 11px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+  .now-time { font-size: 10.5px; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+  .now-label { font-weight: 800; font-size: 17px; margin: 0 0 2px 0; }
+  .now-sub { font-size: 12px; color: var(--muted); margin: 0 0 8px 0; }
+  .now-tracks { margin: 2px 0 10px 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+  .now-tracks li { font-size: 14px; font-weight: 600; }
+  .now-tracks li .tag { font-size: 10.5px; color: var(--navy); font-weight: 700; margin-left: 4px; }
+  .now-progress {
+    height: 5px;
+    width: 100%;
+    background: var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .now-progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--navy), var(--gold));
+    transition: width 0.6s ease;
+  }
+  .slot.now-card { animation: slotIn 0.5s cubic-bezier(.2,1,.3,1) forwards, cardBreathe 3.6s ease-in-out 0.6s infinite; }
+  @keyframes cardBreathe {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-1.5px) scale(1.004); }
+  }
+
+  /* =========================================================
+     LOCK OVERLAY
+     ========================================================= */
+  #lockOverlay {
+    position: fixed; inset: 0; z-index: 999;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; background: var(--overlay-bg);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    text-align: center; padding: 24px;
   }
   #lockOverlay.show { display: flex; }
+  #lockOverlay.show .lock-icon, #lockOverlay.show .lock-title,
+  #lockOverlay.show .lock-sub, #lockOverlay.show .admin-toggle {
+    animation: lockPop 0.5s cubic-bezier(.2,1.3,.4,1) both;
+  }
+  #lockOverlay.show .lock-title { animation-delay: 0.05s; }
+  #lockOverlay.show .lock-sub { animation-delay: 0.1s; }
+  #lockOverlay.show .admin-toggle { animation-delay: 0.15s; }
+  @keyframes lockPop { 0% { opacity: 0; transform: translateY(8px) scale(0.92); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
   .lock-icon { font-size: 34px; }
   .lock-title { font-family: 'Fraunces', serif; font-style: italic; font-weight: 700; font-size: 20px; color: var(--navy); margin: 0; }
   .lock-sub { font-size: 12.5px; color: var(--muted); max-width: 240px; margin: 0; }
-
-  .admin-toggle {
-    margin-top: 4px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 11px;
-    text-decoration: underline;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-  }
-  .admin-box {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-  }
+  .admin-toggle { margin-top: 4px; background: none; border: none; color: var(--muted); font-size: 11px; text-decoration: underline; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .admin-box { display: none; flex-direction: column; align-items: center; gap: 8px; margin-top: 4px; }
   .admin-box.show { display: flex; }
   .admin-box input {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    padding: 9px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink);
-    width: 190px;
-    text-align: center;
+    font-family: 'Inter', sans-serif; font-size: 14px; padding: 9px 12px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink); width: 190px; text-align: center;
   }
   .admin-box button {
-    padding: 9px 18px;
-    border-radius: 30px;
-    border: none;
-    background: var(--navy);
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
+    padding: 9px 18px; border-radius: 30px; border: none;
+    background: linear-gradient(90deg, var(--navy), var(--navy-deep)); color: #fff;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer;
   }
-  .admin-msg {
-    font-size: 11px;
-    color: var(--red);
-    height: 14px;
-    margin: 0;
-  }
+  .admin-msg { font-size: 11px; color: var(--red); height: 14px; margin: 0; }
 </style>
 </head>
 <body>
+
+<div id="introOverlay">
+  <div class="intro-blob a"></div>
+  <div class="intro-blob b"></div>
+  <div class="intro-content">
+    <div class="intro-crest">🎓</div>
+    <div class="intro-eyebrow">Don Bosco Academy of Pampanga</div>
+    <div class="intro-title" id="introTitle"></div>
+    <div class="intro-line"></div>
+    <div class="intro-sub">Second Term · S.Y. 2026–2027</div>
+  </div>
+</div>
 
 <header>
   <div class="eyebrow">DON BOSCO ACADEMY OF PAMPANGA, INC. · SENIOR HIGH SCHOOL</div>
   <h1>Grade 12 Caravario</h1>
   <div class="meta">Second Term · S.Y. 2026–2027 · Adviser: Mr. Jay Lawrence R. Nicdao</div>
-  <nav class="days" id="dayNav"></nav>
+  <nav class="days" id="dayNav">
+    <div id="tabIndicator"></div>
+  </nav>
+  <div id="lockBar" style="display:none;"><div id="lockBarFill"></div></div>
 </header>
 
 <main>
   <div class="timeline" id="timeline"></div>
 </main>
 
-<footer>Tap the tabs above to switch days · locks permanently 40s after opening</footer>
+<footer>Tap the tabs above to switch days · locks 40s after opening</footer>
 
 <div id="lockOverlay">
   <div class="lock-icon">🔒</div>
@@ -331,10 +525,39 @@ function to24(t) {
   if (mer === "AM" && h === 12) h = 0;
   return h * 60 + m;
 }
+function fmtShort(t) {
+  return t.replace(" AM", "a").replace(" PM", "p");
+}
+function currentMinutes() {
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
 
+/* --- Intro: split the title into per-letter spans for a staggered reveal --- */
+(function initIntroTitle() {
+  const text = "Grade 12 Caravario";
+  const el = document.getElementById("introTitle");
+  let delay = 0.55;
+  [...text].forEach(ch => {
+    const span = document.createElement("span");
+    span.className = "ch";
+    span.textContent = ch === " " ? "\u00A0" : ch;
+    span.style.animationDelay = delay.toFixed(2) + "s";
+    el.appendChild(span);
+    delay += 0.028;
+  });
+})();
+
+const introOverlay = document.getElementById("introOverlay");
+const headerEl = document.querySelector("header");
+const mainEl = document.querySelector("main");
+const footerEl = document.querySelector("footer");
 const nav = document.getElementById("dayNav");
+const tabIndicator = document.getElementById("tabIndicator");
 const timeline = document.getElementById("timeline");
 const lockOverlay = document.getElementById("lockOverlay");
+const lockBar = document.getElementById("lockBar");
+const lockBarFill = document.getElementById("lockBarFill");
 const adminToggle = document.getElementById("adminToggle");
 const adminBox = document.getElementById("adminBox");
 const adminPass = document.getElementById("adminPass");
@@ -342,27 +565,18 @@ const adminSubmit = document.getElementById("adminSubmit");
 const adminMsg = document.getElementById("adminMsg");
 
 const LOCK_KEY = "gr12-caravario-schedule-locked";
+// ADMIN_KEY lives in localStorage — scoped per browser/device only.
 const ADMIN_KEY = "gr12-caravario-admin-device";
-
-// SHA-256 of the admin passcode — the plaintext passcode itself is never
-// stored in the page source.
 const ADMIN_HASH = "58965cb158e0c1eba18ff2c47bd2c7d43056d136a57aababe1d22b1ad3874214";
 
 async function sha256Hex(text) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
 }
-
 function isAdminDevice() {
-  try {
-    return localStorage.getItem(ADMIN_KEY) === "1";
-  } catch (e) {
-    return false;
-  }
+  try { return localStorage.getItem(ADMIN_KEY) === "1"; } catch (e) { return false; }
 }
 
-// Escape hatch for testing: ?reset=1 clears the session lock and
-// (if present) this device's admin status.
 try {
   const params = new URLSearchParams(window.location.search);
   if (params.get("reset") === "1") {
@@ -373,18 +587,27 @@ try {
 
 let alreadyLocked = false;
 if (!isAdminDevice()) {
-  try {
-    alreadyLocked = sessionStorage.getItem(LOCK_KEY) === "1";
-  } catch (e) {
-    alreadyLocked = false;
-  }
+  try { alreadyLocked = sessionStorage.getItem(LOCK_KEY) === "1"; } catch (e) { alreadyLocked = false; }
 }
 
-if (alreadyLocked) {
-  lockOverlay.classList.add("show");
-} else {
-  buildSchedule();
+const INTRO_MS = 2100;
+
+function revealAfterIntro() {
+  introOverlay.classList.add("wipe");
+  setTimeout(() => { introOverlay.style.display = "none"; }, 1000);
+
+  if (alreadyLocked) {
+    headerEl.classList.add("reveal");
+    footerEl.classList.add("reveal");
+    lockOverlay.classList.add("show");
+  } else {
+    buildSchedule();
+    headerEl.classList.add("reveal");
+    mainEl.classList.add("reveal");
+    footerEl.classList.add("reveal");
+  }
 }
+setTimeout(revealAfterIntro, INTRO_MS);
 
 adminToggle.addEventListener("click", () => {
   adminBox.classList.toggle("show");
@@ -397,10 +620,11 @@ async function tryAdminUnlock() {
   adminSubmit.disabled = true;
   const hash = await sha256Hex(entered);
   if (hash === ADMIN_HASH) {
-    try { localStorage.setItem(ADMIN_KEY, "1"); } catch (e) { /* ignore */ }
-    try { sessionStorage.removeItem(LOCK_KEY); } catch (e) { /* ignore */ }
+    try { localStorage.setItem(ADMIN_KEY, "1"); } catch (e) {}
+    try { sessionStorage.removeItem(LOCK_KEY); } catch (e) {}
     adminMsg.textContent = "";
     lockOverlay.classList.remove("show");
+    mainEl.classList.add("reveal");
     buildSchedule();
   } else {
     adminMsg.textContent = "Incorrect passcode.";
@@ -408,112 +632,211 @@ async function tryAdminUnlock() {
   }
   adminSubmit.disabled = false;
 }
-
 adminSubmit.addEventListener("click", tryAdminUnlock);
 adminPass.addEventListener("keydown", (e) => { if (e.key === "Enter") tryAdminUnlock(); });
 
 function buildSchedule() {
-  const now = new Date();
-  const jsDay = now.getDay();
+  const jsDay = new Date().getDay();
   const dayIndexMap = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 4 };
   const todayIdx = dayIndexMap.hasOwnProperty(jsDay) ? dayIndexMap[jsDay] : null;
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
   let activeIdx = todayIdx !== null ? todayIdx : 0;
+  let lastNowSlotIdx = null;
 
   DAYS.forEach((d, i) => {
     const btn = document.createElement("button");
     btn.innerHTML = d.short + (i === todayIdx ? '<span class="d">Today</span>' : '<span class="d">&nbsp;</span>');
     if (i === todayIdx) btn.classList.add("today");
-    btn.addEventListener("click", () => { activeIdx = i; render(); });
+    btn.addEventListener("click", () => { activeIdx = i; render(true); moveIndicator(); });
     btn.dataset.idx = i;
     nav.appendChild(btn);
   });
 
-  function render() {
-    [...nav.children].forEach((b, i) => b.classList.toggle("active", i === activeIdx));
+  function moveIndicator() {
+    const btns = [...nav.querySelectorAll("button")];
+    btns.forEach((b, i) => b.classList.toggle("active", i === activeIdx));
+    const activeBtn = btns[activeIdx];
+    if (!activeBtn) return;
+    tabIndicator.style.width = activeBtn.offsetWidth + "px";
+    tabIndicator.style.transform = "translateX(" + activeBtn.offsetLeft + "px)";
+  }
+
+  function render(animate) {
     const day = DAYS[activeIdx];
     const isToday = activeIdx === todayIdx;
+    const nowMinutes = currentMinutes();
     timeline.innerHTML = "";
+    let nowIdxThisRender = -1;
 
-    day.slots.forEach(slot => {
+    day.slots.forEach((slot, idx) => {
       const startM = to24(slot.start);
       const endM = to24(slot.end);
       const isNow = isToday && nowMinutes >= startM && nowMinutes < endM;
+      if (isNow) nowIdxThisRender = idx;
 
       const row = document.createElement("div");
-      row.className = "slot " + slot.type + (isNow ? " is-now" : "");
+      row.style.animationDelay = animate ? (idx * 45) + "ms" : "0ms";
 
-      const time = document.createElement("div");
-      time.className = "time";
-      time.innerHTML = "<b>" + slot.start.replace(" AM","a").replace(" PM","p") + "</b>" + slot.end.replace(" AM"," a").replace(" PM"," p");
-      row.appendChild(time);
+      if (isNow) {
+        row.className = "slot now-card";
+        const remaining = Math.max(0, endM - nowMinutes);
+        const pct = Math.min(100, Math.max(0, ((nowMinutes - startM) / (endM - startM)) * 100));
 
-      const content = document.createElement("div");
-      content.className = "content";
+        const ring = document.createElement("div");
+        ring.className = "now-ring";
+        const inner = document.createElement("div");
+        inner.className = "now-inner " + slot.type;
 
-      if (slot.type === "class") {
-        const ul = document.createElement("ul");
-        ul.className = "tracks";
-        slot.tracks.forEach(([name, track]) => {
-          const li = document.createElement("li");
-          li.textContent = name + " ";
-          const tag = document.createElement("span");
-          tag.className = "tag";
-          tag.textContent = track;
-          li.appendChild(tag);
-          ul.appendChild(li);
-        });
-        content.appendChild(ul);
+        const top = document.createElement("div");
+        top.className = "now-top";
+        top.innerHTML = '<span class="live-pill"><span class="live-dot"></span>NOW</span>' +
+          '<span class="now-countdown" id="nowCountdown">Ends in ' + remaining + 'm</span>';
+        inner.appendChild(top);
+
+        const timeLine = document.createElement("div");
+        timeLine.className = "now-time";
+        timeLine.textContent = fmtShort(slot.start) + " – " + fmtShort(slot.end);
+        inner.appendChild(timeLine);
+
+        if (slot.type === "class") {
+          const label = document.createElement("p");
+          label.className = "now-label";
+          label.textContent = "Class in session";
+          inner.appendChild(label);
+          const ul = document.createElement("ul");
+          ul.className = "now-tracks";
+          slot.tracks.forEach(([name, track]) => {
+            const li = document.createElement("li");
+            li.textContent = name + " ";
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = track;
+            li.appendChild(tag);
+            ul.appendChild(li);
+          });
+          inner.appendChild(ul);
+        } else {
+          const label = document.createElement("p");
+          label.className = "now-label";
+          label.textContent = slot.label;
+          inner.appendChild(label);
+          if (slot.sub) {
+            const sub = document.createElement("p");
+            sub.className = "now-sub";
+            sub.textContent = slot.sub;
+            inner.appendChild(sub);
+          }
+        }
+
+        const prog = document.createElement("div");
+        prog.className = "now-progress";
+        const fill = document.createElement("div");
+        fill.className = "now-progress-fill";
+        fill.id = "nowProgressFill";
+        fill.style.width = pct + "%";
+        prog.appendChild(fill);
+        inner.appendChild(prog);
+
+        ring.appendChild(inner);
+        row.appendChild(ring);
       } else {
-        const p = document.createElement("p");
-        p.className = "label";
-        p.textContent = slot.label;
-        if (isNow) {
-          const badge = document.createElement("span");
-          badge.className = "now-badge";
-          badge.textContent = "NOW";
-          p.appendChild(badge);
+        row.className = "slot " + slot.type;
+
+        const time = document.createElement("div");
+        time.className = "time";
+        time.innerHTML = "<b>" + fmtShort(slot.start) + "</b>" + fmtShort(slot.end);
+        row.appendChild(time);
+
+        const content = document.createElement("div");
+        content.className = "content";
+
+        if (slot.type === "class") {
+          const ul = document.createElement("ul");
+          ul.className = "tracks";
+          slot.tracks.forEach(([name, track]) => {
+            const li = document.createElement("li");
+            li.textContent = name + " ";
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = track;
+            li.appendChild(tag);
+            ul.appendChild(li);
+          });
+          content.appendChild(ul);
+        } else {
+          const p = document.createElement("p");
+          p.className = "label";
+          p.textContent = slot.label;
+          content.appendChild(p);
+          if (slot.sub) {
+            const s = document.createElement("p");
+            s.className = "sub";
+            s.textContent = slot.sub;
+            content.appendChild(s);
+          }
         }
-        content.appendChild(p);
-        if (slot.sub) {
-          const s = document.createElement("p");
-          s.className = "sub";
-          s.textContent = slot.sub;
-          content.appendChild(s);
-        }
+        row.appendChild(content);
       }
 
-      if (slot.type === "class" && isNow) {
-        const badge = document.createElement("span");
-        badge.className = "now-badge";
-        badge.textContent = "NOW";
-        content.insertBefore(badge, content.firstChild);
-      }
-
-      row.appendChild(content);
       timeline.appendChild(row);
     });
+
+    lastNowSlotIdx = nowIdxThisRender;
   }
 
-  render();
+  function updateLiveNow() {
+    if (activeIdx !== todayIdx) return;
+    const day = DAYS[activeIdx];
+    const nowMinutes = currentMinutes();
+    let idx = -1;
+    day.slots.forEach((s, i) => {
+      const sM = to24(s.start), eM = to24(s.end);
+      if (nowMinutes >= sM && nowMinutes < eM) idx = i;
+    });
+    if (idx !== lastNowSlotIdx) { render(false); return; }
+    if (idx === -1) return;
+    const slot = day.slots[idx];
+    const startM = to24(slot.start), endM = to24(slot.end);
+    const remaining = Math.max(0, endM - nowMinutes);
+    const pct = Math.min(100, Math.max(0, ((nowMinutes - startM) / (endM - startM)) * 100));
+    const fill = document.getElementById("nowProgressFill");
+    const countdown = document.getElementById("nowCountdown");
+    if (fill) fill.style.width = pct + "%";
+    if (countdown) countdown.textContent = "Ends in " + remaining + "m";
+  }
+
+  render(true);
+  requestAnimationFrame(moveIndicator);
+  setInterval(updateLiveNow, 20000);
+  window.addEventListener("resize", moveIndicator);
 
   if (!isAdminDevice()) {
     const LOCK_AFTER_MS = 40000;
+    const WARN_AT_MS = LOCK_AFTER_MS - 8000;
+
+    lockBar.style.display = "block";
+    lockBarFill.style.transition = "none";
+    lockBarFill.style.width = "100%";
+    void lockBarFill.offsetWidth;
+    lockBarFill.style.transition = `width ${LOCK_AFTER_MS}ms linear, background 0.4s ease`;
+    lockBarFill.style.width = "0%";
+
+    setTimeout(() => { lockBarFill.classList.add("warn"); }, WARN_AT_MS);
 
     setTimeout(() => {
-      try {
-        sessionStorage.setItem(LOCK_KEY, "1");
-      } catch (e) {
-        /* if storage isn't available, still lock for this page view */
-      }
+      try { sessionStorage.setItem(LOCK_KEY, "1"); } catch (e) {}
       nav.innerHTML = "";
+      nav.appendChild(tabIndicator);
       timeline.innerHTML = "";
+      lockBar.style.display = "none";
       lockOverlay.classList.add("show");
     }, LOCK_AFTER_MS);
+  } else {
+    lockBar.style.display = "none";
   }
 }
 </script>
 
 </body>
 </html>
+
