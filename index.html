@@ -286,14 +286,15 @@ const lockOverlay = document.getElementById("lockOverlay");
 const LOCK_KEY = "gr12-caravario-schedule-locked";
 let alreadyLocked = false;
 try {
-  alreadyLocked = localStorage.getItem(LOCK_KEY) === "0";
+  alreadyLocked = localStorage.getItem(LOCK_KEY) === "1";
 } catch (e) {
   alreadyLocked = false;
 }
 
 if (alreadyLocked) {
   // Never render the schedule again on this device/browser.
-  lockOverlay.classList.add("show");
+  // lockOverlay.classList.add("show");
+  buildSchedule();
 } else {
   buildSchedule();
 }
